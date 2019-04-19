@@ -9,6 +9,7 @@
 #include <franka_hw/franka_state_interface.h>
 #include <hardware_interface/joint_command_interface.h>
 #include <hardware_interface/robot_hw.h>
+#include <sensor_msgs/JointState.h>
 #include <ros/node_handle.h>
 #include <ros/time.h>
 
