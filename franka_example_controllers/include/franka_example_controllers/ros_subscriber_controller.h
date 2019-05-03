@@ -25,11 +25,13 @@ class RosSubscriberController : public controller_interface::MultiInterfaceContr
   void stopping(const ros::Time&) override;
 
  private:
-  void joint_velocity_callback (const sensor_msgs::JointState joint_velocity);
+  void joint_state_callback (const sensor_msgs::JointState joint_command);
   hardware_interface::VelocityJointInterface* velocity_joint_interface_;
+  hardware_interface::PositionJointInterface* position_joint_interface_;
   std::vector<hardware_interface::JointHandle> velocity_joint_handles_;
-  ros::Subscriber joint_velocity_subscriber_;
-  sensor_msgs::JointState velocity_setpoint_;
+  std::vector<hardware_interface::JointHandle> position_joint_handles_;
+  ros::Subscriber joint_command_subscriber_;
+  sensor_msgs::JointState joint_command_;
 };
 
 }  // namespace franka_example_controllers
