@@ -80,27 +80,30 @@ void RosSubscriberController::starting(const ros::Time& /* time */) {
 
 void RosSubscriberController::update(const ros::Time& /* time */,
                                             const ros::Duration& period) {
-  float velocity_speed_sum = 0.0f;
+  bool set_position = false;
   for (size_t i = 0; i < 7; ++i) {
-    velocity_speed_sum += joint_command_.velocity.at(i);
+    if (joint_command_.position.at(i) != 0.0f) {
+        set_position = true;
+        break;
+    }
   }
 
-  if (velocity_speed_sum != 0.0f) {
-    if (joint_command_.velocity.size() != 7) {
-      ROS_ERROR_STREAM(
-              "RosSubscriberController: Was expecting 7 values for the joint velocity. ");
-    } else {
-      for (size_t i = 0; i < 7; ++i) {
-        velocity_joint_handles_.at(i).setCommand(joint_command_.velocity.at(i));
-      }
-    }
-  } else {
+  if (set_position) {
     if (joint_command_.position.size() != 7) {
       ROS_ERROR_STREAM(
               "RosSubscriberController: Was expecting 7 values for the joint position. ");
     } else {
       for (size_t i = 0; i < 7; ++i) {
         position_joint_handles_.at(i).setCommand(joint_command_.position.at(i));
+      }
+    }
+  } else {
+    if (joint_command_.velocity.size() != 7) {
+      ROS_ERROR_STREAM(
+              "RosSubscriberController: Was expecting 7 values for the joint velocity. ");
+    } else {
+      for (size_t i = 0; i < 7; ++i) {
+        velocity_joint_handles_.at(i).setCommand(joint_command_.velocity.at(i));
       }
     }
   }
