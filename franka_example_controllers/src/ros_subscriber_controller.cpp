@@ -81,36 +81,41 @@ namespace franka_example_controllers {
             for (size_t i = 0; i < 7; ++i) {
                 float current_position = velocity_joint_handles_.at(i).getPosition();
                 float target_position = joint_command_.position.at(i);
-                float position_deviation = target_position - current_position;
-                float epsilon = 0.004; //The deviation which is allowed from a position
-                float scaling = 1.2; //scaling factor for the controller
-                float controlled_velocity = scaling * position_deviation;
-                float max_velocity = 1.0;
-                float min_velocity = 0.1;
-                bool velocity_is_negative = false;
+                float position_deviation = -(current_position-target_position);
+                float epsilon = 0.001; //The deviation which is allowed from a position
+                float scaling = 5.0; //scaling factor for the controller
+                float v = scaling * position_deviation;
+                float max_velocity = 2.0;
+                float min_velocity = 0.2;
 
-                if (position_deviation < 0) {
-                    position_deviation *= -1;
-                    velocity_is_negative = true;
+                // If ouside of tolerance
+                if (v<-epsilon || epsilon < v){
+
+                  // If too negative, clip
+                  if (v < -max_velocity)
+                    v = -max_velocity;
+
+                  // If too positive, clip
+                  if (v > max_velocity)
+                    v = max_velocity;
+
+                  // Lower magnitude limit for negative v
+                  if (-min_velocity<v && v<-epsilon)
+                      v = -min_velocity;
+
+                  // Lower magnitude limit for positive v
+                  if (min_velocity>v && v>epsilon)
+                      v = min_velocity;
+
+                  velocity_joint_handles_.at(i).setCommand(v);
                 }
-
-                if (position_deviation > epsilon) {
-                    if (controlled_velocity > max_velocity) {
-                        controlled_velocity = max_velocity;
-                    }
-                    if (controlled_velocity < min_velocity) {
-                        controlled_velocity = min_velocity;
-                    }
-
-                    if () {
-                        position_deviation *= -1;
-                        velocity_is_negative = false;
-                    }
-
-                    velocity_joint_handles_.at(i).setCommand(controlled_velocity);
+                else{
+                  v = 0.0f;
+                  velocity_joint_handles_.at(i).setCommand(v);
+                }
               }
             }
-        } else {
+        else {
           if (joint_command_.velocity.size() != 7) {
             ROS_ERROR_STREAM(
                     "RosSubscriberController: Was expecting 7 values for the joint velocity. ");
