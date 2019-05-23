@@ -82,7 +82,7 @@ namespace franka_example_controllers {
                 float current_position = velocity_joint_handles_.at(i).getPosition();
                 float target_position = joint_command_.position.at(i);
                 float position_deviation = -(current_position-target_position);
-                float epsilon = 0.001; //The deviation which is allowed from a position
+                float epsilon = 0.01; //The deviation which is allowed from a position
                 float scaling = 5.0; //scaling factor for the controller
                 float v = scaling * position_deviation;
                 float max_velocity = 2.0;
