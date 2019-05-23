@@ -16,16 +16,19 @@
 namespace franka_example_controllers {
 
     class RosSubscriberController : public controller_interface::MultiInterfaceController<
-            hardware_interface::VelocityJointInterface> {
+            hardware_interface::VelocityJointInterface, hardware_interface::EffortJointInterface> {
     public:
         bool init(hardware_interface::RobotHW* robot_hardware, ros::NodeHandle& node_handle) override;
         void starting(const ros::Time&) override;
         void update(const ros::Time&, const ros::Duration& period) override;
 
     private:
+        float PoseToVelocityController (float current_pos, float target_pos);
         void joint_state_callback (const sensor_msgs::JointState joint_command);
         hardware_interface::VelocityJointInterface* velocity_joint_interface_;
+        hardware_interface::EffortJointInterface* effort_joint_interface_;
         std::vector<hardware_interface::JointHandle> velocity_joint_handles_;
+        std::vector<hardware_interface::JointHandle> effort_joint_handles_;
         ros::Subscriber joint_command_subscriber_;
         sensor_msgs::JointState joint_command_;
     };
