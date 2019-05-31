@@ -11,7 +11,9 @@ roslaunch ros_subscriber_controller.launch
 ```
 The node will subscribe to  **controller_command/joint_command** which is sensor message of type JointState.
 
-In this message either the joint velocities or joint positions can be specified. The joint position is prioritized higher, in order to provide a joint velocity **set all joint positions to zero**.
+To use you need to set the name of each joint to the mode you want to give the control in. The options are **position, velocity or effort**.
+
+**Be aware that the "effort" is not really effort but angualar acceleration.** 
 
 ## License
 

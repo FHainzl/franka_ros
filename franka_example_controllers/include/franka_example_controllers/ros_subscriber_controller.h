@@ -5,6 +5,7 @@
 #include <array>
 #include <string>
 #include <vector>
+#include <algorithm>
 
 #include <controller_interface/multi_interface_controller.h>
 #include <hardware_interface/joint_command_interface.h>
@@ -16,7 +17,7 @@
 namespace franka_example_controllers {
 
     class RosSubscriberController : public controller_interface::MultiInterfaceController<
-            hardware_interface::VelocityJointInterface, hardware_interface::EffortJointInterface> {
+            hardware_interface::VelocityJointInterface> {
     public:
         bool init(hardware_interface::RobotHW* robot_hardware, ros::NodeHandle& node_handle) override;
         void starting(const ros::Time&) override;
@@ -24,11 +25,10 @@ namespace franka_example_controllers {
 
     private:
         float PoseToVelocityController (float current_pos, float target_pos);
+        float EffortToAngularAccelerationController (float current_vel, float target_accel);
         void joint_state_callback (const sensor_msgs::JointState joint_command);
         hardware_interface::VelocityJointInterface* velocity_joint_interface_;
-        hardware_interface::EffortJointInterface* effort_joint_interface_;
         std::vector<hardware_interface::JointHandle> velocity_joint_handles_;
-        std::vector<hardware_interface::JointHandle> effort_joint_handles_;
         ros::Subscriber joint_command_subscriber_;
         sensor_msgs::JointState joint_command_;
     };
