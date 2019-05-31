@@ -91,7 +91,7 @@ namespace franka_example_controllers {
             (joint_command_.velocity.size() != 7)||
             (joint_command_.effort.size() != 7)||
             (joint_command_.name.size() != 7)) {
-            ROS_ERROR(
+            ROS_ERROR_ONCE(
                     "RosSubscriberController: expected an array size of 7 for all three motion types and the name!");
             return;
         }
@@ -108,7 +108,7 @@ namespace franka_example_controllers {
             } else if (joint_command_.name.at(joint) == "effort") {
                 effort_joint_handles_.at(joint).setCommand(joint_command_.effort.at(joint));
             } else {
-                ROS_ERROR(
+                ROS_ERROR_ONCE(
                         "RosSubscriberController: invalid joint motion type. Needs to be either position, velocity or effort.");
                 velocity_joint_handles_.at(joint).setCommand(0.0f);
             }
