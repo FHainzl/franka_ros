@@ -5,6 +5,7 @@
 #include <array>
 #include <string>
 #include <vector>
+#include <algorithm>
 
 #include <controller_interface/multi_interface_controller.h>
 #include <hardware_interface/joint_command_interface.h>
@@ -23,6 +24,8 @@ namespace franka_example_controllers {
         void update(const ros::Time&, const ros::Duration& period) override;
 
     private:
+        float PoseToVelocityController (float current_pos, float target_pos);
+        float EffortToAngularAccelerationController (float current_vel, float target_accel);
         void joint_state_callback (const sensor_msgs::JointState joint_command);
         hardware_interface::VelocityJointInterface* velocity_joint_interface_;
         std::vector<hardware_interface::JointHandle> velocity_joint_handles_;
