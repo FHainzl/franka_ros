@@ -13,7 +13,10 @@ The node will subscribe to  **controller_command/joint_command** which is sensor
 
 To use you need to set the name of each joint to the mode you want to give the control in. The options are **position, velocity or effort**.
 
-**Be aware that the "effort" is not really effort but angualar acceleration.** 
+**Note that the "effort" does not actually set force/torque targets, but angular acceleration.** 
+
+## Usage
+A Python interface to control the robot using the ROS Subscriber Controller can be found in https://gitlab.com/iaai/appliedAI/research/panda/panda_utilitites. 
 
 ## License
 
